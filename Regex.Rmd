@@ -1,0 +1,49 @@
+---
+title: "Biol 432 - Tutorial 4"
+author: "Matthieu Tuffery"
+date: "20309526"
+output: html_document
+---
+
+
+### Project info:
+
+date: 01/02/2022
+
+github: MatthieuTu/A4_MatthieuTu.git
+
+https://github.com/MatthieuTu/A4_MatthieuTu.git
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+### Code:
+
+The objective of this code is to create a new csv file called "MeasShort.csv", containing the data from "measurements.csv" after modifying the format of the column "Organism".
+
+First we load dplyr to access useful functions and we set the working directory. We load measurement.csv as a DataFrame "MData".
+```{r, warning= FALSE, message=FALSE}
+library(dplyr)
+
+setwd("./")
+
+MData = read.csv(file = "measurements.csv", header = T)
+```
+
+This chunk of code adds a new column "Sp" containing the first letter of the genus, a period and the species name.
+```{r}
+MData = mutate(MData, Sp =  sub(
+                  "(\\w)\\w+", # we keep in memory the first letter, and we replace the first word by...
+                  paste("\\1", ".", sep = ""), # ... the first letter followed by a period.
+                  MData$Organism 
+                              )
+              )
+```
+We create a new dataframe and write a new csv file (MeasShort.csv) with the dataframe.
+```{r}
+ShortData = select(MData, Sp, everything(), -Organism)
+write.csv(ShortData, file = "MeasShort.csv", row.names = F)
+```
+
